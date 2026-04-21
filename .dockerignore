@@ -1,0 +1,8 @@
+README.md
+LICENSE
+bin/
+.gitignore
+.git
+.dockerignore
+Dockerfile
+compose.yaml
