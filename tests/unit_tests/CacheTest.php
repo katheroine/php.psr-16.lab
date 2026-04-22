@@ -114,12 +114,12 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
-    public function hasDoesNotAllowForEmptyKey()
+    public function getDoesNotAllowForEmptyKey()
     {
         $key = '';
 
         $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
-        $this->cache->has($key);
+        $this->cache->get($key);
     }
 
     #[Test]
@@ -147,12 +147,12 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
-    public function getDoesNotAllowForEmptyKey()
+    public function hasDoesNotAllowForEmptyKey()
     {
         $key = '';
 
         $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
-        $this->cache->get($key);
+        $this->cache->has($key);
     }
 
     /**
