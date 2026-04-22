@@ -36,6 +36,16 @@ final class CacheTest extends TestCase
         $this->assertEquals($expectedValue, $actualValue);
     }
 
+    #[Test]
+    #[DataProvider('keyForbiddenCharactersProvider')]
+    public function doesNotAllowForKeyContainingForbiddenCharacter(string $key)
+    {
+        $value = 'Some value.';
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->set($key, $value);
+    }
+
     /**
      * Provides keys guaranteed as proper
      * what is compliant with the PSR-16 specification rule:
@@ -57,6 +67,29 @@ final class CacheTest extends TestCase
             ['key3'],
             ['SOME-key_3'],
             [str_repeat('a', 64)],
+        ];
+    }
+
+    /**
+     * Provides key not allowed characters
+     * what is compliant with the PSR-16 specification rule:
+     *
+     * The following characters are reserved for future extensions
+     * and MUST NOT be supported by implementing libraries: {}()/\@:
+     *
+     * @return array
+     */
+    public static function keyForbiddenCharactersProvider(): array
+    {
+        return [
+            ['{'],
+            ['}'],
+            ['('],
+            [')'],
+            ['/'],
+            ['\\'],
+            ['@'],
+            [':'],
         ];
     }
 
