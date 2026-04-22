@@ -12,9 +12,11 @@ namespace PhpLab\StandardPsr16;
 
 class Cache
 {
-    public function set(string $key, mixed $value)
+    public function set(string $key, mixed $value): bool
     {
         $this->validateKey($key);
+
+        return true;
     }
 
     public function get(string $key)
