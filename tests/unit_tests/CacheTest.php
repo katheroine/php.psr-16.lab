@@ -97,7 +97,7 @@ final class CacheTest extends TestCase
             ['123key'],
             ['key3'],
             ['SOME-key_3'],
-            [str_repeat('a', 63)],
+            [str_repeat('a', 64)],
         ];
     }
 
@@ -160,8 +160,8 @@ final class CacheTest extends TestCase
     public static function tooLongKeysProvider(): array
     {
         return [
-            [str_repeat('a', 64)],
             [str_repeat('a', 65)],
+            [str_repeat('a', 66)],
             [str_repeat('a', 70)],
         ];
     }
