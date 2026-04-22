@@ -33,6 +33,7 @@ class Cache
 
     public function delete(string $key)
     {
+        $this->validateKey($key);
     }
 
     /**
