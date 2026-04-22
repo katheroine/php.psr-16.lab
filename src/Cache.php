@@ -21,6 +21,10 @@ class Cache
         if (strlen($key) > 63) {
             throw new InvalidArgumentException();
         }
+
+        if (empty($key)) {
+            throw new InvalidArgumentException();
+        }
     }
 
     public function get(string $key)
