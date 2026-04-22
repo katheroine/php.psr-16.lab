@@ -12,4 +12,13 @@ namespace PhpLab\StandardPsr16;
 
 class Cache
 {
+    public function set(string $key, mixed $value)
+    {
+
+    }
+
+    public function get(string $key)
+    {
+
+    }
 }
