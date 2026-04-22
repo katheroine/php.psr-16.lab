@@ -19,6 +19,11 @@ class Cache
 
     public function get(string $key)
     {
+        if (strpbrk($key, '{}()/\@:') !== false)
+        {
+            throw new InvalidArgumentException();
+        }
+
         return 'Some value.';
     }
 
