@@ -18,7 +18,7 @@ class Cache
             throw new InvalidArgumentException();
         }
 
-        if (strlen($key) > 64) {
+        if (mb_strlen($key) > 64) {
             throw new InvalidArgumentException();
         }
 
