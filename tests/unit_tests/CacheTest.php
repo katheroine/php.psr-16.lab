@@ -114,6 +114,39 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    public function hasDoesNotAllowForEmptyKey()
+    {
+        $key = '';
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->has($key);
+    }
+
+    #[Test]
+    #[DataProvider('keyForbiddenCharactersProvider')]
+    public function hasDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
+    {
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->has($key);
+    }
+
+    #[Test]
+    #[DataProvider('keyWithForbiddenCharactersProvider')]
+    public function hasDoesNotAllowForKeyContainingForbiddenCharacter(string $key)
+    {
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->has($key);
+    }
+
+    #[Test]
+    #[DataProvider('tooLongKeysProvider')]
+    public function hasDoesNotAllowForTooLongKey(string $key)
+    {
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->has($key);
+    }
+
+    #[Test]
     public function getDoesNotAllowForEmptyKey()
     {
         $key = '';
