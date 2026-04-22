@@ -51,7 +51,7 @@ final class CacheTest extends TestCase
 
     #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
-    public function doesNotAllowForKeyBeingForbiddenCharacter(string $key)
+    public function setDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
         $value = 'Some value.';
 
@@ -61,7 +61,7 @@ final class CacheTest extends TestCase
 
     #[Test]
     #[DataProvider('keyWithForbiddenCharactersProvider')]
-    public function doesNotAllowForKeyContainingForbiddenCharacter(string $key)
+    public function setDoesNotAllowForKeyContainingForbiddenCharacter(string $key)
     {
         $value = 'Some value.';
 
@@ -71,7 +71,7 @@ final class CacheTest extends TestCase
 
     #[Test]
     #[DataProvider('tooLongKeysProvider')]
-    public function doesNotAllowForTooLongKey(string $key)
+    public function setDoesNotAllowForTooLongKey(string $key)
     {
         $value = 'Some value.';
 
@@ -80,7 +80,7 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
-    public function doesNotAllowForEmptyKey()
+    public function setDoesNotAllowForEmptyKey()
     {
         $key = '';
         $value = 'Some value.';
