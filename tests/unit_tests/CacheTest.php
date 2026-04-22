@@ -97,6 +97,14 @@ final class CacheTest extends TestCase
         $this->cache->get($key);
     }
 
+    #[Test]
+    #[DataProvider('keyWithForbiddenCharactersProvider')]
+    public function getDoesNotAllowForKeyContainingForbiddenCharacter(string $key)
+    {
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->get($key);
+    }
+
     /**
      * Provides keys guaranteed as proper
      * what is compliant with the PSR-16 specification rule:

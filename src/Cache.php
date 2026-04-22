@@ -21,7 +21,7 @@ class Cache
     {
         if (strpbrk($key, '{}()/\@:') !== false)
         {
-            throw new InvalidArgumentException();
+            // throw new InvalidArgumentException();
         }
 
         return 'Some value.';
