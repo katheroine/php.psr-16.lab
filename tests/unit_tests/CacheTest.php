@@ -90,6 +90,15 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    #[DataProvider('properCachedValuesProvider')]
+    public function setStoresValue(string $key, mixed $value): void
+    {
+        $result = $this->cache->set($key, $value);
+
+        $this->assertTrue($result);
+    }
+
+    #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
     public function getDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
@@ -187,6 +196,8 @@ final class CacheTest extends TestCase
         $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
         $this->cache->delete($key);
     }
+
+
 
     /**
      * Provides keys guaranteed as proper
@@ -298,6 +309,44 @@ final class CacheTest extends TestCase
             [str_repeat('ą', 65)],
             [str_repeat('ą', 66)],
             [str_repeat('ą', 70)],
+        ];
+    }
+
+    /**
+     * Provides key-value pairs of all data types
+     * that implementing libraries MUST support,
+     * compliant with the PSR-16 specification rule:
+     *
+     * Implementing libraries MUST support all serializable PHP data types,
+     * including: Strings, Integers, Floats, Booleans, Null, Arrays, Objects.
+     *
+     * Note: Null cannot be distinguished from a cache miss.
+     *
+     * @return array
+     */
+    public static function properCachedValuesProvider(): array
+    {
+        return [
+            'string'                => ['key', 'Some string value.'],
+            'string_empty'          => ['key', ''],
+            'string_multibyte'      => ['key', 'Zażółć gęślą jaźń'],
+            'integer_positive'      => ['key', 42],
+            'integer_negative'      => ['key', -42],
+            'integer_zero'          => ['key', 0],
+            'integer_max'           => ['key', PHP_INT_MAX],
+            'integer_min'           => ['key', PHP_INT_MIN],
+            'float_positive'        => ['key', 3.14],
+            'float_negative'        => ['key', -3.14],
+            'float_zero'            => ['key', 0.0],
+            'float_max'             => ['key', PHP_FLOAT_MAX],
+            'float_min'             => ['key', PHP_FLOAT_MIN],
+            'boolean_true'          => ['key', true],
+            'boolean_false'         => ['key', false],
+            'array_indexed'         => ['key', [1, 2, 3]],
+            'array_associative'     => ['key', ['foo' => 'bar', 'baz' => 42]],
+            'array_nested'          => ['key', ['foo' => ['bar' => ['baz']]]],
+            'array_empty'           => ['key', []],
+            'object_serializable'   => ['key', new \stdClass()],
         ];
     }
 
