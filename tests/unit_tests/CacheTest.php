@@ -66,6 +66,16 @@ final class CacheTest extends TestCase
         $this->cache->set($key, $value);
     }
 
+    #[Test]
+    public function doesNotAllowForEmptyKey()
+    {
+        $key = '';
+        $value = 'Some value.';
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->set($key, $value);
+    }
+
     /**
      * Provides keys guaranteed as proper
      * what is compliant with the PSR-16 specification rule:
