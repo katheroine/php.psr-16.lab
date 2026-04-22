@@ -82,6 +82,7 @@ final class CacheTest extends TestCase
             ['somekey'],
             ['some_key'],
             ['some-key'],
+            ['some.key'],
             ['SOMEkey'],
             ['123key'],
             ['key3'],
