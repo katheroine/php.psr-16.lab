@@ -17,6 +17,10 @@ class Cache
         if (strpbrk($key, '{}()/\@:') !== false) {
             throw new InvalidArgumentException();
         }
+
+        if (strlen($key) > 63) {
+            throw new InvalidArgumentException();
+        }
     }
 
     public function get(string $key)
