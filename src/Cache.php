@@ -29,6 +29,11 @@ class Cache
             throw new InvalidArgumentException();
         }
 
+        if (empty($key))
+        {
+            throw new InvalidArgumentException();
+        }
+
         return 'Some value.';
     }
 
