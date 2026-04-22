@@ -14,7 +14,9 @@ class Cache
 {
     public function set(string $key, mixed $value)
     {
-
+        if (strpbrk($key, '{}()/\@:') !== false) {
+            throw new InvalidArgumentException();
+        }
     }
 
     public function get(string $key)
