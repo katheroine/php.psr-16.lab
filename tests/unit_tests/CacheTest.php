@@ -38,7 +38,7 @@ final class CacheTest extends TestCase
 
     #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
-    public function doesNotAllowForKeyContainingForbiddenCharacter(string $key)
+    public function doesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
         $value = 'Some value.';
 
