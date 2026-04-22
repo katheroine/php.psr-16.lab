@@ -56,6 +56,16 @@ final class CacheTest extends TestCase
         $this->cache->set($key, $value);
     }
 
+    #[Test]
+    #[DataProvider('tooLongKeysProvider')]
+    public function doesNotAllowForTooLongKey(string $key)
+    {
+        $value = 'Some value.';
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->set($key, $value);
+    }
+
     /**
      * Provides keys guaranteed as proper
      * what is compliant with the PSR-16 specification rule:
@@ -76,7 +86,7 @@ final class CacheTest extends TestCase
             ['123key'],
             ['key3'],
             ['SOME-key_3'],
-            [str_repeat('a', 64)],
+            [str_repeat('a', 63)],
         ];
     }
 
@@ -123,6 +133,25 @@ final class CacheTest extends TestCase
             ['some\\key'],
             ['some@key'],
             ['some:key'],
+        ];
+    }
+
+    /**
+     * Provides too long keys interpreted as improper
+     * what is compliant with the PSR-16 specification rule:
+     *
+     * Implementing libraries MUST support keys consisting
+     * of the characters A-Z, a-z, 0-9, _, and .
+     * in any order in UTF-8 encoding and a length of up to 64 characters.
+     *
+     * @return array
+     */
+    public static function tooLongKeysProvider(): array
+    {
+        return [
+            [str_repeat('a', 64)],
+            [str_repeat('a', 65)],
+            [str_repeat('a', 70)],
         ];
     }
 
