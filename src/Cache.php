@@ -14,21 +14,29 @@ class Cache
 {
     public function set(string $key, mixed $value)
     {
-        if (strpbrk($key, '{}()/\@:') !== false) {
-            throw new InvalidArgumentException();
-        }
-
-        if (mb_strlen($key) > 64) {
-            throw new InvalidArgumentException();
-        }
-
-        if (empty($key)) {
-            throw new InvalidArgumentException();
-        }
+        $this->validateKey($key);
     }
 
     public function get(string $key)
     {
         return 'Some value.';
+    }
+
+    /**
+     * Checks if key it compliant with the PSR-16 specification rule:
+     *
+     * Implementing libraries MUST support keys consisting
+     * of the characters A-Z, a-z, 0-9, _, and .
+     * in any order in UTF-8 encoding and a length of up to 64 characters.
+     */
+    private function validateKey(string $key): void
+    {
+        if (
+            empty($key)
+            || mb_strlen($key) > 64
+            || strpbrk($key, '{}()/\@:') !== false
+        ) {
+            throw new InvalidArgumentException();
+        }
     }
 }
