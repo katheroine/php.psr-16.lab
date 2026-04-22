@@ -24,6 +24,11 @@ class Cache
         return 'Some value.';
     }
 
+    public function has(string $key): bool
+    {
+        return true;
+    }
+
     /**
      * Checks if key it compliant with the PSR-16 specification rule:
      *
