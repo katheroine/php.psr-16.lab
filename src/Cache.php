@@ -19,6 +19,6 @@ class Cache
 
     public function get(string $key)
     {
-
+        return 'Some value.';
     }
 }
