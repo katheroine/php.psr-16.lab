@@ -105,6 +105,14 @@ final class CacheTest extends TestCase
         $this->cache->get($key);
     }
 
+    #[Test]
+    #[DataProvider('tooLongKeysProvider')]
+    public function getDoesNotAllowForTooLongKey(string $key)
+    {
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->get($key);
+    }
+
     /**
      * Provides keys guaranteed as proper
      * what is compliant with the PSR-16 specification rule:
@@ -212,6 +220,9 @@ final class CacheTest extends TestCase
             [str_repeat('a', 65)],
             [str_repeat('a', 66)],
             [str_repeat('a', 70)],
+            [str_repeat('ą', 65)],
+            [str_repeat('ą', 66)],
+            [str_repeat('ą', 70)],
         ];
     }
 
