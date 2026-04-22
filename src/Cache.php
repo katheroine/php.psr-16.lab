@@ -15,7 +15,7 @@ class Cache
     public function set(string $key, mixed $value)
     {
         if (strpbrk($key, '{}()/\@:') !== false) {
-            throw new InvalidArgumentException();
+            // throw new InvalidArgumentException();
         }
     }
 
