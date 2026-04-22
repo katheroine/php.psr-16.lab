@@ -155,6 +155,39 @@ final class CacheTest extends TestCase
         $this->cache->has($key);
     }
 
+    #[Test]
+    #[DataProvider('keyForbiddenCharactersProvider')]
+    public function deleteDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
+    {
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->delete($key);
+    }
+
+    #[Test]
+    #[DataProvider('keyWithForbiddenCharactersProvider')]
+    public function deleteDoesNotAllowForKeyContainingForbiddenCharacter(string $key)
+    {
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->delete($key);
+    }
+
+    #[Test]
+    #[DataProvider('tooLongKeysProvider')]
+    public function deleteDoesNotAllowForTooLongKey(string $key)
+    {
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->delete($key);
+    }
+
+    #[Test]
+    public function deleteDoesNotAllowForEmptyKey()
+    {
+        $key = '';
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->delete($key);
+    }
+
     /**
      * Provides keys guaranteed as proper
      * what is compliant with the PSR-16 specification rule:
