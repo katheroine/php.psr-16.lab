@@ -37,6 +37,19 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    #[DataProvider('multibyteUtf8KeysProvider')]
+    public function setsDataWithProperMultibyteKey(string $key)
+    {
+        $expectedValue = 'Some value.';
+
+        $this->cache->set($key, $expectedValue);
+
+        $actualValue = $this->cache->get($key);
+
+        $this->assertEquals($expectedValue, $actualValue);
+    }
+
+    #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
     public function doesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
@@ -98,6 +111,26 @@ final class CacheTest extends TestCase
             ['key3'],
             ['SOME-key_3'],
             [str_repeat('a', 64)],
+        ];
+    }
+
+    /**
+     * Provides multi-byte UTF-8 keys guaranteed as proper
+     * what is compliant with the PSR-16 specification rule:
+     *
+     * Implementing libraries MUST support keys consisting
+     * of the characters A-Z, a-z, 0-9, _, and .
+     * in any order in UTF-8 encoding and a length of up to 64 characters.
+     *
+     * @return array
+     */
+    public static function multibyteUtf8KeysProvider(): array
+    {
+        return [
+            ['Zażółć'], // Polish characters (multi-byte)
+            ['你好'], // Chinese characters
+            ['🚀key'], // emoji (4 bytes),
+            [str_repeat('ą', 64)], // 64 multi-byte characters
         ];
     }
 
