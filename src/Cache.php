@@ -19,20 +19,7 @@ class Cache
 
     public function get(string $key)
     {
-        if (strpbrk($key, '{}()/\@:') !== false)
-        {
-            throw new InvalidArgumentException();
-        }
-
-        if (mb_strlen($key) > 64)
-        {
-            throw new InvalidArgumentException();
-        }
-
-        if (empty($key))
-        {
-            throw new InvalidArgumentException();
-        }
+        $this->validateKey($key);
 
         return 'Some value.';
     }
