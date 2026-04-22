@@ -31,6 +31,10 @@ class Cache
         return true;
     }
 
+    public function delete(string $key)
+    {
+    }
+
     /**
      * Checks if key it compliant with the PSR-16 specification rule:
      *
