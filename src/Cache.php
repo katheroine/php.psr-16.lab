@@ -26,6 +26,8 @@ class Cache
 
     public function has(string $key): bool
     {
+        $this->validateKey($key);
+
         return true;
     }
 
