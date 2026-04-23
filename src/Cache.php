@@ -22,7 +22,7 @@ class Cache
         return true;
     }
 
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         $this->validateKey($key);
 
@@ -44,7 +44,7 @@ class Cache
         return true;
     }
 
-    public function delete(string $key)
+    public function delete(string $key): bool
     {
         $this->validateKey($key);
 
