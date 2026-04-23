@@ -454,6 +454,25 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    public function setMultipleOverwritesAlreadyCachedValues()
+    {
+        $someKey = 'some_key';
+        $someValue = 'Some value';
+        $otherKey = 'other_key';
+        $otherValue = 'Other value';
+        $this->cache->set($someKey, $someValue);
+        $this->cache->set($otherKey, $otherValue);
+
+        $anotherValue = 'Another value';
+        $this->cache->setMultiple([
+            $otherKey => $anotherValue,
+        ]);
+
+        $this->assertSame($someValue, $this->cache->get($someKey));
+        $this->assertSame($anotherValue, $this->cache->get($otherKey));
+    }
+
+    #[Test]
     public function setMultipleAcceptsTraversable(): void
     {
         $someKey = 'some_key';
