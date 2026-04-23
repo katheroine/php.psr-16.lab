@@ -13,6 +13,7 @@ namespace PhpLab\StandardPsr16;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use ArrayIterator;
 
 final class CacheTest extends TestCase
 {
@@ -440,6 +441,26 @@ final class CacheTest extends TestCase
             $otherKey => $otherValue,
         ]);
 
+        $this->assertSame($someValue, $this->cache->get($someKey));
+        $this->assertSame($otherValue, $this->cache->get($otherKey));
+    }
+
+    #[Test]
+    public function setMultipleAcceptsTraversable(): void
+    {
+        $someKey = 'some_key';
+        $someValue = 'Some value';
+        $otherKey = 'other_key';
+        $otherValue = 'Other value';
+
+        $values = new ArrayIterator([
+            $someKey => $someValue,
+            $otherKey => $otherValue,
+        ]);
+
+        $result = $this->cache->setMultiple($values);
+
+        $this->assertTrue($result);
         $this->assertSame($someValue, $this->cache->get($someKey));
         $this->assertSame($otherValue, $this->cache->get($otherKey));
     }
