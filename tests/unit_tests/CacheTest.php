@@ -414,6 +414,14 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    public function setMultipleAcceptEmptyValues()
+    {
+        $result = $this->cache->setMultiple([]);
+
+        $this->assertTrue($result);
+    }
+
+    #[Test]
     #[DataProvider('properCachedValuesProvider')]
     public function setMultipleStoresValues(string $key, mixed $value)
     {
