@@ -59,6 +59,8 @@ class Cache
 
     public function clear(): bool
     {
+        $this->cache = [];
+
         return true;
     }
 
