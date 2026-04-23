@@ -26,6 +26,10 @@ class Cache
     {
         $this->validateKey($key);
 
+        if (! key_exists($key, $this->cache)) {
+            return null;
+        }
+
         return $this->cache[$key];
     }
 
