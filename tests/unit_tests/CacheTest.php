@@ -142,6 +142,20 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    public function getReturnsProperOneFromStoredValues(): void
+    {
+        $chosenKey = 'other_key';
+        $expectedValue = 'Other value';
+
+        $this->cache->set('some_key', 'Some value');
+        $this->cache->set($chosenKey, $expectedValue);
+        $this->cache->set('another_key', 'Another key');
+
+        $actualValue = $this->cache->get($chosenKey);
+        $this->assertSame($expectedValue, $actualValue);
+    }
+
+    #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
     public function hasDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
