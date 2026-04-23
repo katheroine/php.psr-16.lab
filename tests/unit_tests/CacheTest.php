@@ -380,6 +380,23 @@ final class CacheTest extends TestCase
         $this->cache->setMultiple($values);
     }
 
+    #[Test]
+    public function setMultipleDoesNotStoreAnythingWhenOneKeyIsInvalid(): void
+    {
+        $properKey = 'proper_key';
+
+        try {
+            $this->cache->setMultiple([
+                $properKey => 'Some value',
+                '{' => 'Other value',
+            ]);
+        } catch (\PhpLab\StandardPsr16\InvalidArgumentException) {
+            // On purpose.
+        }
+
+        $this->assertFalse($this->cache->has($properKey));
+    }
+
     /**
      * Provides key not allowed characters
      * what is compliant with the PSR-16 specification rule:
