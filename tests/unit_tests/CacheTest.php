@@ -381,20 +381,31 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
-    public function setMultipleDoesNotStoreAnythingWhenOneKeyIsInvalid(): void
+    #[DataProvider('improperKeysProvider')]
+    public function setMultipleDoesNotStoreAnythingWhenOneKeyIsInvalid(string $improperKey): void
     {
         $properKey = 'proper_key';
+        $value = [
+            $properKey => 'Some value',
+            $improperKey => 'Other value',
+        ];
 
         try {
-            $this->cache->setMultiple([
-                $properKey => 'Some value',
-                '{' => 'Other value',
-            ]);
+            $this->cache->setMultiple($value);
         } catch (\PhpLab\StandardPsr16\InvalidArgumentException) {
             // On purpose.
         }
 
         $this->assertFalse($this->cache->has($properKey));
+    }
+
+    public static function improperKeysProvider(): array
+    {
+        return array_merge(
+            self::keyForbiddenCharactersProvider(),
+            self::keyWithForbiddenCharactersProvider(),
+            self::tooLongKeysProvider(),
+        );
     }
 
     /**
