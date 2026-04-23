@@ -57,6 +57,10 @@ class Cache
         return true;
     }
 
+    public function clear()
+    {
+    }
+
     /**
      * Checks if key it compliant with the PSR-16 specification rule:
      *
