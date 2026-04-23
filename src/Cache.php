@@ -42,7 +42,10 @@ class Cache
 
     public function delete(string $key)
     {
+        unset($this->cache[$key]);
         $this->validateKey($key);
+
+        return true;
     }
 
     /**
