@@ -46,6 +46,14 @@ class Cache
         return $this->cache[$key];
     }
 
+    public function getMultiple(iterable $keys): bool
+    {
+        $keys = self::unifyMultipleArgumentType($keys);
+        $this->validateKeys($keys);
+
+        return true;
+    }
+
     public function has(string $key): bool
     {
         $this->validateKey($key);
@@ -83,17 +91,24 @@ class Cache
     }
 
     /**
-     * Checks if each value key it compliant with the PSR-16 specification rule:
-     *
-     * Implementing libraries MUST support keys consisting
-     * of the characters A-Z, a-z, 0-9, _, and .
-     * in any order in UTF-8 encoding and a length of up to 64 characters.
+     * Checks if each value key is compliant with the PSR-16 specification.
      */
     private function validateKeysOfValues(array $values): void
     {
         array_map(fn ($key) =>
             $this->validateKey($key),
             array_keys($values)
+        );
+    }
+
+    /**
+     * Checks if each key is compliant with the PSR-16 specification.
+     */
+    private function validateKeys(array $keys)
+    {
+        array_map(fn ($key) =>
+            $this->validateKey($key),
+            $keys
         );
     }
 
