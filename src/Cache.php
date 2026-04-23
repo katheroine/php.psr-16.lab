@@ -24,6 +24,10 @@ class Cache
 
     public function setMultiple(array $values): bool
     {
+        $this->validateKeysOfValues($values);
+
+        $this->cache = $values;
+
         return true;
     }
 
