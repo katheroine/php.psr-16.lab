@@ -33,6 +33,10 @@ class Cache
     {
         $this->validateKey($key);
 
+        if (! array_key_exists($key, $this->cache)) {
+            return false;
+        }
+
         return true;
     }
 
