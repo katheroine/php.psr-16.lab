@@ -398,18 +398,33 @@ final class CacheTest extends TestCase
     public function setMultipleDoesNotStoreAnythingWhenOneKeyIsInvalid(string $improperKey): void
     {
         $properKey = 'proper_key';
-        $value = [
+        $values = [
             $properKey => 'Some value',
             $improperKey => 'Other value',
         ];
 
         try {
-            $this->cache->setMultiple($value);
+            $this->cache->setMultiple($values);
         } catch (\PhpLab\StandardPsr16\InvalidArgumentException) {
             // On purpose.
         }
 
         $this->assertFalse($this->cache->has($properKey));
+    }
+
+    #[Test]
+    #[DataProvider('properCachedValuesProvider')]
+    public function setMultipleStoresValues(string $key, mixed $value): void
+    {
+        $values = [
+            'some_key' => 'Some value',
+            $key => $value,
+        ];
+        $result = $this->cache->setMultiple($values);
+
+        $this->assertTrue($result);
+        $actualValue = $this->cache->get($key);
+        $this->assertSame($value, $actualValue);
     }
 
     public static function improperKeysProvider(): array
