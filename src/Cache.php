@@ -24,6 +24,9 @@ class Cache
 
     public function setMultiple(array $values)
     {
+        foreach ($values as $key => $value) {
+            $this->validateKey($key);
+        }
     }
 
     public function get(string $key): mixed
