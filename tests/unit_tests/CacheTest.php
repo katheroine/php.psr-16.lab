@@ -381,6 +381,19 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    public function setMultipleDoesNotAllowForEmptyKey()
+    {
+        $improperKey = '';
+        $values = [
+            'proper_key' => 'Some value.',
+            $improperKey => 'Other value.',
+        ];
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->setMultiple($values);
+    }
+
+    #[Test]
     #[DataProvider('improperKeysProvider')]
     public function setMultipleDoesNotStoreAnythingWhenOneKeyIsInvalid(string $improperKey): void
     {
