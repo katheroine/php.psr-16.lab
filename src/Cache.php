@@ -24,7 +24,7 @@ class Cache
 
     public function setMultiple(iterable $values): bool
     {
-        $values = is_array($values) ? $values : iterator_to_array($values);
+        $values = self::unifyMultipleArgumentType($values);
         $this->validateKeysOfValues($values);
 
         $this->cache = array_merge(
@@ -77,6 +77,26 @@ class Cache
         return true;
     }
 
+    private static function unifyMultipleArgumentType(iterable $values): array
+    {
+        return (is_array($values) ? $values : iterator_to_array($values));
+    }
+
+    /**
+     * Checks if each value key it compliant with the PSR-16 specification rule:
+     *
+     * Implementing libraries MUST support keys consisting
+     * of the characters A-Z, a-z, 0-9, _, and .
+     * in any order in UTF-8 encoding and a length of up to 64 characters.
+     */
+    private function validateKeysOfValues(array $values): void
+    {
+        array_map(fn ($key) =>
+            $this->validateKey($key),
+            array_keys($values)
+        );
+    }
+
     /**
      * Checks if key it compliant with the PSR-16 specification rule:
      *
@@ -93,20 +113,5 @@ class Cache
         ) {
             throw new InvalidArgumentException();
         }
-    }
-
-    /**
-     * Checks if each value key it compliant with the PSR-16 specification rule:
-     *
-     * Implementing libraries MUST support keys consisting
-     * of the characters A-Z, a-z, 0-9, _, and .
-     * in any order in UTF-8 encoding and a length of up to 64 characters.
-     */
-    private function validateKeysOfValues(array $values): void
-    {
-        array_map(fn ($key) =>
-            $this->validateKey($key),
-            array_keys($values)
-        );
     }
 }
