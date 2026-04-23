@@ -279,6 +279,25 @@ final class CacheTest extends TestCase
         $this->assertTrue($this->cache->has($anotherKey));
     }
 
+    #[Test]
+    public function deleteRemovesNothingForNotStoredKey(): void
+    {
+        $someKey = 'some_key';
+        $otherKey = 'other_key';
+        $anotherKey = 'another_key';
+
+        $this->cache->set($someKey, 'Some value');
+        $this->cache->set($otherKey, 'Other value');
+        $this->cache->set($anotherKey, 'Another value');
+
+        $result = $this->cache->delete('unexistent_key');
+        $this->assertFalse($result);
+
+        $this->assertTrue($this->cache->has($someKey));
+        $this->assertTrue($this->cache->has($otherKey));
+        $this->assertTrue($this->cache->has($anotherKey));
+    }
+
     /**
      * Provides keys guaranteed as proper
      * what is compliant with the PSR-16 specification rule:
