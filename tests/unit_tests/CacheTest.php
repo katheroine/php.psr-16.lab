@@ -175,6 +175,16 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    #[DataProvider('properCachedValuesProvider')]
+    public function hasReturnsTrueForStoredKey(string $key, mixed $value): void
+    {
+        $this->cache->set($key, $value);
+
+        $result = $this->cache->has($key);
+        $this->assertTrue($result);
+    }
+
+    #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
     public function deleteDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
