@@ -74,6 +74,23 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    public function setOverwritesAlreadyCachedValues()
+    {
+        $someKey = 'some_key';
+        $someValue = 'Some value';
+        $otherKey = 'other_key';
+        $otherValue = 'Other value';
+        $this->cache->set($someKey, $someValue);
+        $this->cache->set($otherKey, $otherValue);
+
+        $anotherValue = 'Another value';
+        $this->cache->set($otherKey, $anotherValue);
+
+        $this->assertSame($someValue, $this->cache->get($someKey));
+        $this->assertSame($anotherValue, $this->cache->get($otherKey));
+    }
+
+    #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
     public function getDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
