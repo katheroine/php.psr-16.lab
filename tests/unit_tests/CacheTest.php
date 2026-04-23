@@ -341,6 +341,45 @@ final class CacheTest extends TestCase
         $this->assertNull($actualValue);
     }
 
+    #[Test]
+    #[DataProvider('keyForbiddenCharactersProvider')]
+    public function setMultipleDoesNotAllowForKeyBeingForbiddenCharacter(string $improperKey): void
+    {
+        $values = [
+            'proper_key' => 'Some value.',
+            $improperKey => 'Other value.',
+        ];
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->setMultiple($values);
+    }
+
+    #[Test]
+    #[DataProvider('keyWithForbiddenCharactersProvider')]
+    public function setMultipleDoesNotAllowForKeyContainingForbiddenCharacter(string $improperKey)
+    {
+        $values = [
+            'proper_key' => 'Some value.',
+            $improperKey => 'Other value.',
+        ];
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->setMultiple($values);
+    }
+
+    #[Test]
+    #[DataProvider('tooLongKeysProvider')]
+    public function setMultipleDoesNotAllowForTooLongKey(string $improperKey)
+    {
+        $values = [
+            'proper_key' => 'Some value.',
+            $improperKey => 'Other value.',
+        ];
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->setMultiple($values);
+    }
+
     /**
      * Provides key not allowed characters
      * what is compliant with the PSR-16 specification rule:
