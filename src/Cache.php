@@ -29,9 +29,11 @@ class Cache
         return $this->cache[$key];
     }
 
-    public function has(string $key)
+    public function has(string $key): bool
     {
         $this->validateKey($key);
+
+        return true;
     }
 
     public function delete(string $key)
