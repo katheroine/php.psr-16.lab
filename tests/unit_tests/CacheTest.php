@@ -24,32 +24,6 @@ final class CacheTest extends TestCase
     private Cache $cache;
 
     #[Test]
-    #[DataProvider('properKeysProvider')]
-    public function setsDataWithProperKey(string $key)
-    {
-        $expectedValue = 'Some value.';
-
-        $this->cache->set($key, $expectedValue);
-
-        $actualValue = $this->cache->get($key);
-
-        $this->assertEquals($expectedValue, $actualValue);
-    }
-
-    #[Test]
-    #[DataProvider('multibyteUtf8KeysProvider')]
-    public function setsDataWithProperMultibyteKey(string $key)
-    {
-        $expectedValue = 'Some value.';
-
-        $this->cache->set($key, $expectedValue);
-
-        $actualValue = $this->cache->get($key);
-
-        $this->assertEquals($expectedValue, $actualValue);
-    }
-
-    #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
     public function setDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
@@ -317,49 +291,54 @@ final class CacheTest extends TestCase
         $this->assertFalse($this->cache->has($anotherKey));
     }
 
-    /**
-     * Provides keys guaranteed as proper
-     * what is compliant with the PSR-16 specification rule:
-     *
-     * Implementing libraries MUST support keys consisting
-     * of the characters A-Z, a-z, 0-9, _, and .
-     * in any order in UTF-8 encoding and a length of up to 64 characters.
-     *
-     * @return array
-     */
-    public static function properKeysProvider(): array
+    #[Test]
+    #[DataProvider('properKeysProvider')]
+    public function handlesSingleDataWithProperKey(string $key)
     {
-        return [
-            ['somekey'],
-            ['some_key'],
-            ['some-key'],
-            ['some.key'],
-            ['SOMEkey'],
-            ['123key'],
-            ['key3'],
-            ['SOME-key_3'],
-            [str_repeat('a', 64)],
-        ];
+        $expectedValue = 'Some value.';
+
+        $result = $this->cache->set($key, $expectedValue);
+
+        $existence = $this->cache->has($key);
+        $actualValue = $this->cache->get($key);
+
+        $this->assertTrue($result);
+        $this->assertTrue($existence);
+        $this->assertEquals($expectedValue, $actualValue);
+
+        $result = $this->cache->delete($key);
+
+        $existence = $this->cache->has($key);
+        $actualValue = $this->cache->get($key);
+
+        $this->assertTrue($result);
+        $this->assertFalse($existence);
+        $this->assertNull($actualValue);
     }
 
-    /**
-     * Provides multi-byte UTF-8 keys guaranteed as proper
-     * what is compliant with the PSR-16 specification rule:
-     *
-     * Implementing libraries MUST support keys consisting
-     * of the characters A-Z, a-z, 0-9, _, and .
-     * in any order in UTF-8 encoding and a length of up to 64 characters.
-     *
-     * @return array
-     */
-    public static function multibyteUtf8KeysProvider(): array
+    #[Test]
+    #[DataProvider('multibyteUtf8KeysProvider')]
+    public function handlesSingleDataWithProperMultibyteKey(string $key)
     {
-        return [
-            ['Zażółć'], // Polish characters (multi-byte)
-            ['你好'], // Chinese characters
-            ['🚀key'], // emoji (4 bytes),
-            [str_repeat('ą', 64)], // 64 multi-byte characters
-        ];
+        $expectedValue = 'Some value.';
+
+        $result = $this->cache->set($key, $expectedValue);
+
+        $existence = $this->cache->has($key);
+        $actualValue = $this->cache->get($key);
+
+        $this->assertTrue($result);
+        $this->assertTrue($existence);
+        $this->assertEquals($expectedValue, $actualValue);
+
+        $result = $this->cache->delete($key);
+
+        $existence = $this->cache->has($key);
+        $actualValue = $this->cache->get($key);
+
+        $this->assertTrue($result);
+        $this->assertFalse($existence);
+        $this->assertNull($actualValue);
     }
 
     /**
@@ -427,6 +406,51 @@ final class CacheTest extends TestCase
             [str_repeat('ą', 65)],
             [str_repeat('ą', 66)],
             [str_repeat('ą', 70)],
+        ];
+    }
+
+    /**
+     * Provides keys guaranteed as proper
+     * what is compliant with the PSR-16 specification rule:
+     *
+     * Implementing libraries MUST support keys consisting
+     * of the characters A-Z, a-z, 0-9, _, and .
+     * in any order in UTF-8 encoding and a length of up to 64 characters.
+     *
+     * @return array
+     */
+    public static function properKeysProvider(): array
+    {
+        return [
+            ['somekey'],
+            ['some_key'],
+            ['some-key'],
+            ['some.key'],
+            ['SOMEkey'],
+            ['123key'],
+            ['key3'],
+            ['SOME-key_3'],
+            [str_repeat('a', 64)],
+        ];
+    }
+
+    /**
+     * Provides multi-byte UTF-8 keys guaranteed as proper
+     * what is compliant with the PSR-16 specification rule:
+     *
+     * Implementing libraries MUST support keys consisting
+     * of the characters A-Z, a-z, 0-9, _, and .
+     * in any order in UTF-8 encoding and a length of up to 64 characters.
+     *
+     * @return array
+     */
+    public static function multibyteUtf8KeysProvider(): array
+    {
+        return [
+            ['Zażółć'], // Polish characters (multi-byte)
+            ['你好'], // Chinese characters
+            ['🚀key'], // emoji (4 bytes),
+            [str_repeat('ą', 64)], // 64 multi-byte characters
         ];
     }
 
