@@ -149,10 +149,21 @@ final class CacheTest extends TestCase
 
         $this->cache->set('some_key', 'Some value');
         $this->cache->set($chosenKey, $expectedValue);
-        $this->cache->set('another_key', 'Another key');
+        $this->cache->set('another_key', 'Another value');
 
         $actualValue = $this->cache->get($chosenKey);
         $this->assertSame($expectedValue, $actualValue);
+    }
+
+    #[Test]
+    public function getReturnsNullForNotStoredKey(): void
+    {
+        $this->cache->set('some_key', 'Some value');
+        $this->cache->set('other_key', 'Other value');
+        $this->cache->set('another_key', 'Another value');
+
+        $result = $this->cache->get('unexistent_key');
+        $this->assertNull($result);
     }
 
     #[Test]
