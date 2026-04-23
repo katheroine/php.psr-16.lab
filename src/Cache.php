@@ -22,8 +22,9 @@ class Cache
         return true;
     }
 
-    public function setMultiple(array $values): bool
+    public function setMultiple(iterable $values): bool
     {
+        $values = is_array($values) ? $values : iterator_to_array($values);
         $this->validateKeysOfValues($values);
 
         $this->cache = array_merge(
