@@ -24,9 +24,7 @@ class Cache
 
     public function setMultiple(array $values)
     {
-        foreach ($values as $key => $value) {
-            $this->validateKey($key);
-        }
+        $this->validateKeysOfValues($values);
     }
 
     public function get(string $key): mixed
@@ -87,5 +85,20 @@ class Cache
         ) {
             throw new InvalidArgumentException();
         }
+    }
+
+    /**
+     * Checks if each value key it compliant with the PSR-16 specification rule:
+     *
+     * Implementing libraries MUST support keys consisting
+     * of the characters A-Z, a-z, 0-9, _, and .
+     * in any order in UTF-8 encoding and a length of up to 64 characters.
+     */
+    private function validateKeysOfValues(array $values): void
+    {
+        array_map(fn ($key) =>
+            $this->validateKey($key),
+            array_keys($values)
+        );
     }
 }
