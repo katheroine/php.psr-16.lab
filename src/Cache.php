@@ -26,7 +26,10 @@ class Cache
     {
         $this->validateKeysOfValues($values);
 
-        $this->cache = $values;
+        $this->cache = array_merge(
+            $this->cache,
+            $values
+        );
 
         return true;
     }
