@@ -238,6 +238,18 @@ final class CacheTest extends TestCase
         $this->cache->delete($key);
     }
 
+    #[Test]
+    #[DataProvider('properCachedValuesProvider')]
+    public function deleteRemovesStoredValue(string $key, mixed $value): void
+    {
+        $this->cache->set($key, $value);
+
+        $result = $this->cache->delete($key);
+        $this->assertTrue($result);
+        $isExistent = $this->cache->has($key);
+        $this->assertFalse($isExistent);
+    }
+
     /**
      * Provides keys guaranteed as proper
      * what is compliant with the PSR-16 specification rule:
