@@ -240,7 +240,7 @@ final class CacheTest extends TestCase
 
     #[Test]
     #[DataProvider('properCachedValuesProvider')]
-    public function deleteRemovesStoredValue(string $key, mixed $value): void
+    public function deleteRemovesStoredEntry(string $key, mixed $value): void
     {
         $this->cache->set($key, $value);
 
@@ -248,6 +248,24 @@ final class CacheTest extends TestCase
         $this->assertTrue($result);
         $isExistent = $this->cache->has($key);
         $this->assertFalse($isExistent);
+    }
+
+    #[Test]
+    public function deleteRemovesProperOneFromStoredEntries(): void
+    {
+        $someKey = 'some_key';
+        $chosenKey = 'other_key';
+        $anotherKey = 'another_key';
+
+        $this->cache->set($someKey, 'Some value');
+        $this->cache->set($chosenKey, 'Other value');
+        $this->cache->set($anotherKey, 'Another value');
+
+        $this->cache->delete($chosenKey);
+
+        $this->assertTrue($this->cache->has($someKey));
+        $this->assertFalse($this->cache->has($chosenKey));
+        $this->assertTrue($this->cache->has($anotherKey));
     }
 
     /**
