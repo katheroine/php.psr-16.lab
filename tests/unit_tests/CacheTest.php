@@ -185,6 +185,13 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
+    public function hasReturnsFalseForNotStoredKey(): void
+    {
+        $result = $this->cache->has('unexistent_key');
+        $this->assertFalse($result);
+    }
+
+    #[Test]
     #[DataProvider('keyForbiddenCharactersProvider')]
     public function deleteDoesNotAllowForKeyBeingForbiddenCharacter(string $key)
     {
@@ -216,8 +223,6 @@ final class CacheTest extends TestCase
         $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
         $this->cache->delete($key);
     }
-
-
 
     /**
      * Provides keys guaranteed as proper
