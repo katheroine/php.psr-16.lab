@@ -22,9 +22,9 @@ class Cache
         return true;
     }
 
-    public function setMultiple(array $values)
+    public function setMultiple(array $values): bool
     {
-        $this->validateKeysOfValues($values);
+        return true;
     }
 
     public function get(string $key): mixed
