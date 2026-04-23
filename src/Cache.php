@@ -46,8 +46,13 @@ class Cache
 
     public function delete(string $key)
     {
-        unset($this->cache[$key]);
         $this->validateKey($key);
+
+        if (! key_exists($key, $this->cache)) {
+            return false;
+        }
+
+        unset($this->cache[$key]);
 
         return true;
     }
