@@ -395,7 +395,7 @@ final class CacheTest extends TestCase
 
     #[Test]
     #[DataProvider('improperKeysProvider')]
-    public function setMultipleDoesNotStoreAnythingWhenOneKeyIsInvalid(string $improperKey): void
+    public function setMultipleDoesNotStoreAnythingWhenOneKeyIsInvalid(string $improperKey)
     {
         $properKey = 'proper_key';
         $values = [
@@ -414,7 +414,7 @@ final class CacheTest extends TestCase
 
     #[Test]
     #[DataProvider('properCachedValuesProvider')]
-    public function setMultipleStoresValues(string $key, mixed $value): void
+    public function setMultipleStoresValues(string $key, mixed $value)
     {
         $values = [
             'some_key' => 'Some value',
@@ -425,6 +425,23 @@ final class CacheTest extends TestCase
         $this->assertTrue($result);
         $actualValue = $this->cache->get($key);
         $this->assertSame($value, $actualValue);
+    }
+
+    #[Test]
+    public function setMultipleDoesNotAffectAlreadyCachedValues()
+    {
+        $someKey = 'some_key';
+        $someValue = 'Some value';
+        $this->cache->set($someKey, $someValue);
+
+        $otherKey = 'other_key';
+        $otherValue = 'Other value';
+        $this->cache->setMultiple([
+            $otherKey => $otherValue,
+        ]);
+
+        $this->assertSame($someValue, $this->cache->get($someKey));
+        $this->assertSame($otherValue, $this->cache->get($otherKey));
     }
 
     public static function improperKeysProvider(): array
