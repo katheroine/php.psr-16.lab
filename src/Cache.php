@@ -22,6 +22,10 @@ class Cache
         return true;
     }
 
+    public function setMultiple(array $values)
+    {
+    }
+
     public function get(string $key): mixed
     {
         $this->validateKey($key);
