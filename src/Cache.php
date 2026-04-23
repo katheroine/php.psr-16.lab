@@ -57,8 +57,9 @@ class Cache
         return true;
     }
 
-    public function clear()
+    public function clear(): bool
     {
+        return true;
     }
 
     /**
