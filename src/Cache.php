@@ -12,9 +12,12 @@ namespace PhpLab\StandardPsr16;
 
 class Cache
 {
+    private array $cache = [];
+
     public function set(string $key, mixed $value): bool
     {
         $this->validateKey($key);
+        $this->cache[$key] = $value;
 
         return true;
     }
@@ -23,7 +26,7 @@ class Cache
     {
         $this->validateKey($key);
 
-        return 'Some value.';
+        return $this->cache[$key];
     }
 
     public function has(string $key): bool
