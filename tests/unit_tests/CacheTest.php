@@ -704,6 +704,13 @@ final class CacheTest extends TestCase
         $this->cache->deleteMultiple($keys);
     }
 
+    #[Test]
+    public function deleteMultipleAcceptEmptyKeys()
+    {
+        $result = $this->cache->deleteMultiple([]);
+
+        $this->assertTrue($result);
+    }
 
     public static function improperKeysProvider(): array
     {
