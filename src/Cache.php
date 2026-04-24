@@ -88,6 +88,11 @@ class Cache
         return true;
     }
 
+    public function deleteMultiple(array $keys)
+    {
+        $this->validateKeys($keys);
+    }
+
     public function clear(): bool
     {
         $this->cache = [];
