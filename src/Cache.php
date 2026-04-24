@@ -46,7 +46,7 @@ class Cache
         return $this->cache[$key];
     }
 
-    public function getMultiple(iterable $keys): iterable
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         $keys = self::unifyMultipleArgumentType($keys);
         $this->validateKeys($keys);
@@ -55,7 +55,7 @@ class Cache
 
         foreach ($keys as $key) {
             if (! key_exists($key, $this->cache)) {
-                $values[$key] = null;
+                $values[$key] = $default;
             } else {
                 $values[$key] = $this->cache[$key];
             }
