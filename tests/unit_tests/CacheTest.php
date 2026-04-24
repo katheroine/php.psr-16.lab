@@ -652,6 +652,59 @@ final class CacheTest extends TestCase
         $this->assertSame($otherValue, $result[$otherKey]);
     }
 
+    #[Test]
+    #[DataProvider('keyForbiddenCharactersProvider')]
+    public function deleteMultipleDoesNotAllowForKeyBeingForbiddenCharacter(string $improperKey): void
+    {
+        $keys = [
+            'proper_key',
+            $improperKey,
+        ];
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->deleteMultiple($keys);
+    }
+
+    #[Test]
+    #[DataProvider('keyWithForbiddenCharactersProvider')]
+    public function deleteMultipleDoesNotAllowForKeyContainingForbiddenCharacter(string $improperKey)
+    {
+        $keys = [
+            'proper_key',
+            $improperKey,
+        ];
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->deleteMultiple($keys);
+    }
+
+    #[Test]
+    #[DataProvider('tooLongKeysProvider')]
+    public function deleteMultipleDoesNotAllowForTooLongKey(string $improperKey)
+    {
+        $keys = [
+            'proper_key',
+            $improperKey,
+        ];
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->deleteMultiple($keys);
+    }
+
+    #[Test]
+    public function deleteMultipleDoesNotAllowForEmptyKey()
+    {
+        $improperKey = '';
+        $keys = [
+            'proper_key',
+            $improperKey,
+        ];
+
+        $this->expectException(\Psr\SimpleCache\InvalidArgumentException::class);
+        $this->cache->deleteMultiple($keys);
+    }
+
+
     public static function improperKeysProvider(): array
     {
         return array_merge(
