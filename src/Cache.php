@@ -54,7 +54,11 @@ class Cache
         $values = [];
 
         foreach ($keys as $key) {
-            $values[$key] = $this->cache[$key];
+            if (! key_exists($key, $this->cache)) {
+                $values[$key] = null;
+            } else {
+                $values[$key] = $this->cache[$key];
+            }
         }
 
         return $values;
