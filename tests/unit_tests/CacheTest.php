@@ -561,6 +561,14 @@ final class CacheTest extends TestCase
         $this->cache->getMultiple($keys);
     }
 
+    #[Test]
+    public function getMultipleAcceptEmptyKeys()
+    {
+        $result = $this->cache->getMultiple([]);
+
+        $this->assertEmpty($result);
+    }
+
     public static function improperKeysProvider(): array
     {
         return array_merge(
