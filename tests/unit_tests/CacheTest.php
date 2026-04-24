@@ -148,7 +148,7 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
-    public function getReturnsNullForNotStoredKey(): void
+    public function getReturnsForNotStoredKey(): void
     {
         $this->cache->set('some_key', 'Some value');
         $this->cache->set('other_key', 'Other value');
@@ -156,6 +156,18 @@ final class CacheTest extends TestCase
 
         $result = $this->cache->get('unexistent_key');
         $this->assertNull($result);
+    }
+
+    #[Test]
+    #[DataProvider('properCachedValuesProvider')]
+    public function getReturnsDefaultNotStoredKey(string $key, mixed $default): void
+    {
+        $this->cache->set('some_key', 'Some value');
+        $this->cache->set('other_key', 'Other value');
+        $this->cache->set('another_key', 'Another value');
+
+        $result = $this->cache->get('unexistent_key', $default);
+        $this->assertSame($result, $default);
     }
 
     #[Test]
