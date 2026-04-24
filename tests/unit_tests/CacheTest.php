@@ -148,7 +148,7 @@ final class CacheTest extends TestCase
     }
 
     #[Test]
-    public function getReturnsForNotStoredKey(): void
+    public function getReturnsNullForNotStoredKey(): void
     {
         $this->cache->set('some_key', 'Some value');
         $this->cache->set('other_key', 'Other value');
@@ -160,7 +160,7 @@ final class CacheTest extends TestCase
 
     #[Test]
     #[DataProvider('properCachedValuesProvider')]
-    public function getReturnsDefaultNotStoredKey(string $key, mixed $default): void
+    public function getReturnsDefaultForNotStoredKey(string $key, mixed $default): void
     {
         $this->cache->set('some_key', 'Some value');
         $this->cache->set('other_key', 'Other value');
@@ -598,6 +598,21 @@ final class CacheTest extends TestCase
         $actualValues = $this->cache->getMultiple([$someKey, $otherKey]);
 
         $this->assertSame($expectedValues, $actualValues);
+    }
+
+    #[Test]
+    public function getMultipleReturnsNullForNotStoredKey(): void
+    {
+        $this->cache->set('some_key', 'Some value');
+        $this->cache->set('other_key', 'Other value');
+        $this->cache->set('another_key', 'Another value');
+
+        $result = $this->cache->getMultiple([
+            'some_key',
+            'unexistent_key',
+            'another_key',
+        ]);
+        $this->assertNull($result['unexistent_key']);
     }
 
     public static function improperKeysProvider(): array
