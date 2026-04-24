@@ -46,12 +46,12 @@ class Cache
         return $this->cache[$key];
     }
 
-    public function getMultiple(iterable $keys): bool
+    public function getMultiple(iterable $keys): iterable
     {
         $keys = self::unifyMultipleArgumentType($keys);
         $this->validateKeys($keys);
 
-        return true;
+        return [];
     }
 
     public function has(string $key): bool
