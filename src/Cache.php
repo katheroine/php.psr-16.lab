@@ -35,12 +35,12 @@ class Cache
         return true;
     }
 
-    public function get(string $key): mixed
+    public function get(string $key, mixed $default = null): mixed
     {
         $this->validateKey($key);
 
         if (! key_exists($key, $this->cache)) {
-            return null;
+            return $default;
         }
 
         return $this->cache[$key];
