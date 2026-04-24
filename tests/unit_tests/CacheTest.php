@@ -631,6 +631,27 @@ final class CacheTest extends TestCase
         $this->assertSame($default, $result['unexistent_key']);
     }
 
+    #[Test]
+    public function getMultipleAcceptsTraversable(): void
+    {
+        $someKey = 'some_key';
+        $someValue = 'Some value';
+        $otherKey = 'other_key';
+        $otherValue = 'Other value';
+        $this->cache->set($someKey, $someValue);
+        $this->cache->set($otherKey, $otherValue);
+
+        $keys = new ArrayIterator([
+            $someKey,
+            $otherKey,
+        ]);
+
+        $result = $this->cache->getMultiple($keys);
+
+        $this->assertSame($someValue, $result[$someKey]);
+        $this->assertSame($otherValue, $result[$otherKey]);
+    }
+
     public static function improperKeysProvider(): array
     {
         return array_merge(
