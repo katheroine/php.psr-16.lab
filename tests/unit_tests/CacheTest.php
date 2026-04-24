@@ -569,6 +569,25 @@ final class CacheTest extends TestCase
         $this->assertEmpty($result);
     }
 
+    #[Test]
+    #[DataProvider('properCachedValuesProvider')]
+    public function getMultipleReturnsValues(string $someKey, mixed $someValue)
+    {
+        $otherKey = 'some_key';
+        $otherValue = 'Some value.';
+        $this->cache->set($someKey, $someValue);
+        $this->cache->set($otherKey, $otherValue);
+
+        $expectedValues = [
+            $someKey => $someValue,
+            $otherKey => $otherValue,
+        ];
+
+        $actualValues = $this->cache->getMultiple([$someKey, $otherKey]);
+
+        $this->assertSame($expectedValues, $actualValues);
+    }
+
     public static function improperKeysProvider(): array
     {
         return array_merge(
