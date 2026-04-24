@@ -51,7 +51,13 @@ class Cache
         $keys = self::unifyMultipleArgumentType($keys);
         $this->validateKeys($keys);
 
-        return [];
+        $values = [];
+
+        foreach ($keys as $key) {
+            $values[$key] = $this->cache[$key];
+        }
+
+        return $values;
     }
 
     public function has(string $key): bool
