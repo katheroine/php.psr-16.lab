@@ -92,6 +92,8 @@ class Cache
     {
         $this->validateKeys($keys);
 
+        $this->cache = [];
+
         return true;
     }
 
