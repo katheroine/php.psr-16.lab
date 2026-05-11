@@ -712,6 +712,26 @@ final class CacheTest extends TestCase
         $this->assertTrue($result);
     }
 
+    #[Test]
+    #[DataProvider('properCachedValuesProvider')]
+    public function deleteMultipleRemovesStoredEntries(string $someKey, mixed $someValue)
+    {
+        $otherKey = 'some_key';
+        $otherValue = 'Some value.';
+        $this->cache->set($someKey, $someValue);
+        $this->cache->set($otherKey, $otherValue);
+
+        $keys = [
+            $someKey,
+            $otherKey,
+        ];
+
+        $result = $this->cache->deleteMultiple($keys);
+        $this->assertTrue($result);
+        $this->assertFalse($this->cache->has($someKey));
+        $this->assertFalse($this->cache->has($otherKey));
+    }
+
     public static function improperKeysProvider(): array
     {
         return array_merge(
