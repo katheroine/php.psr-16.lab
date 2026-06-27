@@ -146,13 +146,63 @@ Implementing libraries MUST support all *serializable PHP data types*, including
 * *Booleans* - `True` and `False`.
 * *Null* - The `null` value (although it will not be distinguishable from a *cache miss* when reading it back out).
 * *Arrays* - Indexed, associative and multidimensional arrays of arbitrary depth.
-* *Objects* - Any object that supports lossless serialization and deserialization such that `$o == unserialize(serialize($o))`. Objects MAY leverage PHP's Serializable interface, `__sleep()` or `__wakeup()` magic methods, or similar language functionality if appropriate.
+* *Objects* - Any object that supports lossless serialization and deserialization such that `$o == unserialize(serialize($o))`. Objects MAY leverage PHP's `Serializable` interface, `__sleep()` or `__wakeup()` magic methods, or similar language functionality if appropriate.
 
 All data passed into the *implementing library* MUST be returned exactly as passed. That includes the variable type. That is, it is an error to return `(string) 5` if `(int) 5` was the value saved. *Implementing libraries* MAY use PHP's `serialize()`/`unserialize()` functions internally but are not required to do so. Compatibility with them is simply used as a baseline for acceptable object values.
 
 If it is not possible to return the exact saved value for any reason, *implementing libraries* MUST respond with a *cache miss* rather than corrupted data.
 
 -- [PSR Documentation](https://www.php-fig.org/psr/psr-16/#14-data)
+
+#### Strings
+
+The **byte** is a unit of digital information that most commonly consists of *eight bits*. Historically, the byte was the number of bits used *to encode a single character of text in a computer* and for this reason it is *the smallest addressable unit of memory* in many computer architectures. To disambiguate arbitrarily sized bytes from the common 8-bit definition, network protocol documents such as the Internet Protocol (RFC 791) refer to an 8-bit byte as an *octet*. Those bits in an octet are usually counted with numbering from 0 to 7 or 7 to 0 depending on the bit *endianness*.
+
+-- [Wikipedia](https://en.wikipedia.org/wiki/Byte)
+
+In computing, **endianness** is the order in which *bytes* within a word data type are transmitted over a data communication medium or addressed in computer memory, counting only byte significance compared to earliness.
+
+-- [Wikipedia](https://en.wikipedia.org/wiki/Endianness)
+
+A **string** is a series of characters, where a character is the same as a *byte*. This means that PHP only supports a 256-character set, and hence does not offer native *Unicode* support.
+
+-- [PHP Documentation](https://www.php.net/manual/en/language.types.string.php#language.types.string)
+
+**Unicode** (also known as *The Unicode Standard* and *TUS*) is a *character encoding standard* maintained by the Unicode Consortium designed to support the use of text in all of the world's writing systems that can be digitized. Version 17.0 defines 159,801 characters and 172 scripts used in various ordinary, literary, academic and technical contexts.
+
+*Unicode* has largely supplanted the previous environment of myriad incompatible *character sets* used within different locales and on different computer architectures. The entire repertoire of these sets, plus many additional characters, were merged into the single *Unicode* set. *Unicode* is used to encode the vast majority of text on the Internet, including most web pages, and relevant *Unicode* support has become a common consideration in contemporary software development. *Unicode* is ultimately capable of encoding more than 1.1 million characters.
+
+-- [Wikipedia](https://en.wikipedia.org/wiki/Unicode)
+
+**UTF-8** is a *character encoding* standard used for electronic communication. Defined by the *Unicode Standard*, the name is derived from *Unicode Transformation Format – 8-bit*. As of 2026, almost every webpage (99%) is transmitted as *UTF-8*.
+
+*UTF-8* supports all 1,112,064 valid Unicode code points using a variable-width encoding of one to four one-byte (8-bit) code units.
+
+Code points with lower numerical values, which tend to occur more frequently, are encoded using fewer bytes. It was designed for backward compatibility with *ASCII*: the first `128` characters of *Unicode*, which correspond one-to-one with *ASCII*, are encoded using a single byte with the same binary value as *ASCII*, so that a *UTF-8*-encoded file using only those characters is identical to an *ASCII* file. Most software designed for any extended *ASCII* can read and write *UTF-8*, and this results in fewer internationalization issues than any alternative text encoding.
+
+*UTF-8* is dominant for all countries/languages on the internet, is used in most standards, often the only allowed encoding, and is supported by all modern operating systems and programming languages.
+
+-- [Wikipedia](https://en.wikipedia.org/wiki/UTF-8)
+
+The *string* in PHP is implemented as *an array of bytes and an integer indicating the length of the buffer*. It has *no information about how those bytes translate to characters*, leaving that task to the programmer. There are no limitations on the values the *string* can be composed of; in particular, *bytes* with value `0` (*NUL bytes*) are allowed anywhere in the *string* (however, a few functions, said in this manual not to be *binary safe*, may hand off the *strings* to libraries that ignore data after a *NUL byte*.)
+
+-- [PHP Documentation](https://www.php.net/manual/en/language.types.string.php#language.types.string.details)
+
+A **binary-safe** function treats its input as *a raw stream of bytes* and ignores every textual aspect it may have. The term is mainly used in the PHP programming language to describe expected behaviour when passing binary data into functions whose main responsibility is text and string manipulating, and is used widely in the official PHP documentation.
+
+-- [Wikipedia](https://en.wikipedia.org/wiki/Binary-safe)
+
+This nature of the *string type* explains why there is no separate *byte type* in PHP – *strings* take this role. Functions that return no textual data – for instance, arbitrary data read from a network socket – will still return *strings*.
+
+Given that PHP does not dictate a specific *encoding* for *strings*, one might wonder how *string* literals are encoded. For instance, is the string `"á"` equivalent to `"\xE1"` (*ISO-8859-1*), `"\xC3\xA1"` (*UTF-8*, C form), `"\x61\xCC\x81"` (*UTF-8*, D form) or any other possible representation? The answer is that *string* will be encoded in whatever fashion it is encoded in the *script file*. Thus, if the script is written in *ISO-8859-1*, the *string* will be encoded in *ISO-8859-1* and so on. However, this does not apply if *Zend Multibyte* is enabled; in that case, the script may be written in an arbitrary encoding (which is explicitly declared or is detected) and then converted to a certain internal encoding, which is then the encoding that will be used for the string literals. Note that there are some constraints on the encoding of the script (or on the internal encoding, should *Zend Multibyte* be enabled) – this almost always means that this encoding should be a compatible superset of *ASCII*, such as *UTF-8* or *ISO-8859-1*. Note, however, that state-dependent encodings where the same byte values can be used in initial and non-initial shift states may be problematic.
+
+Of course, in order to be useful, functions that operate on text may have to make some assumptions about how the string is encoded.
+
+-- [PHP Documentation](https://www.php.net/manual/en/language.types.string.php#language.types.string.details)
+
+All supported encodings can be returned by the function *`mb_list_encodings`* (needs a `php-mbstring` extension for an appropriate PHP version installed).
+
+-- [PHP Documentation](https://www.php.net/manual/en/function.mb-list-encodings.php)
 
 ## Cache key
 
